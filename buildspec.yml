@@ -26,7 +26,7 @@ phases:
     commands:
       - echo "Preparing manifests as artifacts"
       - mkdir -p out
-      - "sed 's|image: .*|image: '$IMAGE_REPO:$IMAGE_TAG'|g' k8s/deployment.yaml > out/deployment.yaml"
+      - sed 's|image: .*|image: '$IMAGE_REPO:$IMAGE_TAG'|g' k8s/deployment.yaml > out/deployment.yaml
       - cp k8s/service.yaml out/service.yaml
 
 artifacts:
