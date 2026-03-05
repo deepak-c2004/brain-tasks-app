@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO: "deepakc742004/brain-tasks-app"
+  parameter-store:
+    DOCKERHUB_USERNAME: "/dockerhub/username"
+    DOCKERHUB_PASSWORD: "/dockerhub/password"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to DockerHub"
+      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:-latest}
+      - echo "Using image tag: $IMAGE_TAG"
+
+  build:
+    commands:
+      - echo "Building Docker image"
+      - docker build -t $IMAGE_REPO:$IMAGE_TAG .
+      - docker push $IMAGE_REPO:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo "Preparing manifests as artifacts"
+      - mkdir -p out
+      - sed "s|image: .*|image: $IMAGE_REPO:$IMAGE_TAG|g" k8s/deployment.yaml > out/deployment.yaml
+      - cp k8s/service.yaml out/service.yaml
+
+artifacts:
+  files:
+    - out/deployment.yaml
+    - out/service.yaml
