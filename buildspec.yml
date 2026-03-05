@@ -23,11 +23,11 @@ phases:
       - "docker push $IMAGE_REPO:$IMAGE_TAG"
 
   post_build:
-    commands:
-      - echo "Preparing manifests as artifacts"
-      - mkdir -p out
-      - "sed s|image:.*|image: $IMAGE_REPO:$IMAGE_TAG|g k8s/deployment.yaml > out/deployment.yaml"
-      - cp k8s/service.yaml out/service.yaml
+     commands:
+       - echo "Preparing manifests as artifacts"
+       - mkdir -p out
+       - 'sed -E "s|^(\s*image:\s*).*$|\1'"$IMAGE_REPO:$IMAGE_TAG"'|g" k8s/deployment.yaml > out/deployment.yaml'
+       - cp k8s/service.yaml out/service.yaml
 
 artifacts:
   files:
