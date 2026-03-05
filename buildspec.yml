@@ -25,11 +25,11 @@ phases:
       - mkdir -p out
       # The '|' below handles the colon in 'image:' perfectly
       - |
-        sed "s|image: .*|image: $IMAGE_REPO:$IMAGE_TAG|g" k8s/deployment.yaml > out/deployment.yaml
-      - cp k8s/service.yaml out/service.yaml
+        sed "s|image: .*|image: $IMAGE_REPO:$IMAGE_TAG|g" k8s/deployment.yaml > deployment.yaml
+      - cp k8s/service.yaml service.yaml
 
 artifacts:
   files:
-    - out/deployment.yaml
-    - out/service.yaml
+    - 'deployment.yaml'
+    - 'service.yaml'
   discard-paths: yes
