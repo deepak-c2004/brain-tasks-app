@@ -127,5 +127,5 @@ The application is accessible using the AWS LoadBalancer DNS.
 
 Example:
 
-http://<loadbalancer-dns>:3000
+http://loadbalancer:3000
 
